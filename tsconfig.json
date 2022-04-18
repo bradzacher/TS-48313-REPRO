@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "Node12",
+    "target": "ES6",
+    "strict": true,
+  },
+  "files": [
+    "./file.tsx"
+  ],
+}
