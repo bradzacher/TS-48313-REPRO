@@ -6,9 +6,8 @@ const testFilePath = path.resolve(process.cwd(), 'file.tsx');
 const program = ts.createProgram({
   rootNames: [testFilePath],
   options: {
-    "allowJs": true,
-    "target": ts.ScriptTarget.ESNext,
-    "strict": true,
+    target: ts.ScriptTarget.ESNext,
+    strict: true,
   }
 });
 
