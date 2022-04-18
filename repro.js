@@ -1,18 +1,16 @@
 // @ts-check
-const {parseAndGenerateServices} = require('@typescript-eslint/typescript-estree');
-const fs = require('fs');
 const path = require('path');
+const ts = require('typescript');
 
 const testFilePath = path.resolve(process.cwd(), 'file.tsx');
-const {services: {program}} = parseAndGenerateServices(
-  fs.readFileSync(testFilePath, 'utf8'),
-  {
-    filePath: testFilePath,
-    loggerFn: false,
-    project: path.resolve(process.cwd(), 'tsconfig.json'),
-    tsconfigRootDir: process.cwd(),
+const program = ts.createProgram({
+  rootNames: [testFilePath],
+  options: {
+    "allowJs": true,
+    "target": ts.ScriptTarget.ESNext,
+    "strict": true,
   }
-);
+});
 
 const sourceFile = program.getSourceFile(testFilePath);
 const checker = program.getTypeChecker();
@@ -28,7 +26,7 @@ const node = sourceFile
   .statements[2]
   .thenStatement
   .statements[0]
-  .expression
+  .expression;
 const type = checker.getTypeAtLocation(node);
 console.log(
   checker.typeToString(type)
