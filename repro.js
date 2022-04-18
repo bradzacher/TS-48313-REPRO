@@ -14,7 +14,35 @@ const program = ts.createProgram({
 const sourceFile = program.getSourceFile(testFilePath);
 const checker = program.getTypeChecker();
 
-const node = sourceFile
+////
+//// WORKING CASE
+////
+
+// this will pick the `toPart` identifier on line 22
+const nodeWorking = sourceFile
+  .statements[1]
+  // @ts-expect-error -- too lazy to refine properly
+  .body
+  .statements[2]
+  .expression
+  .arguments[0]
+  .body
+  .statements[1]
+  .expression;
+const typeWorking = checker.getTypeAtLocation(nodeWorking);
+console.log(
+  'working case:',
+  checker.typeToString(typeWorking),
+);
+
+
+
+////
+//// BROKEN CASE
+////
+
+// this will pick the `toPart` identifier on line 10
+const nodeBroken = sourceFile
   .statements[0]
   // @ts-expect-error -- too lazy to refine properly
   .body
@@ -22,11 +50,11 @@ const node = sourceFile
   .expression
   .arguments[0]
   .body
-  .statements[2]
-  .thenStatement
-  .statements[0]
+  .statements[1]
   .expression;
-const type = checker.getTypeAtLocation(node);
+const typeBroken = checker.getTypeAtLocation(nodeBroken);
+// it *should* print `number`, but it prints `any`
 console.log(
-  checker.typeToString(type)
+  'broken case:',
+  checker.typeToString(typeBroken),
 );
